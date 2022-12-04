@@ -247,16 +247,11 @@ void QMC5883LCompass::_smoothing(){
 		_vTotals[i] = _vTotals[i] + _vHistory[_vScan][i];
 		
 		if ( _smoothAdvanced ) {
-			max = 0;
-			for (int j = 0; j < _smoothSteps - 1; j++) {
-				max = ( _vHistory[j][i] > _vHistory[max][i] ) ? j : max;
-			}
-			
-			min = 0;
-			for (int k = 0; k < _smoothSteps - 1; k++) {
-				min = ( _vHistory[k][i] < _vHistory[min][i] ) ? k : min;
-			}
-					
+			max = 0; min = 0;
+			for (int j = 0; j < _smoothSteps; j++) {
+				max = ( _vHistory[j][i] > _vHistory[max][i] ) ? j : max
+				min = ( _vHistory[j][i] < _vHistory[min][i] ) ? j : min;
+			}		
 			_vSmooth[i] = ( _vTotals[i] - (_vHistory[max][i] + _vHistory[min][i]) ) / (_smoothSteps - 2);
 		} else {
 			_vSmooth[i] = _vTotals[i]  / _smoothSteps;
